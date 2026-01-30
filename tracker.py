@@ -36,47 +36,68 @@ class JobTracker:
     def is_us_location(self, location: str) -> bool:
         """Check if a location is in the US."""
         if not location:
-            return True  # Include jobs with no location specified
+            return False  # Exclude jobs with no location specified
         
         location_lower = location.lower()
         
-        # US indicators
-        us_indicators = [
-            'united states', 'usa', 'u.s.', 'us ',
-            'remote', 'remote us', 'remote - us',
-            'california', 'ca', 'san francisco', 'sf', 'bay area',
-            'new york', 'ny', 'nyc', 'manhattan',
-            'washington', 'seattle', 'wa',
-            'texas', 'tx', 'austin', 'dallas',
-            'colorado', 'co', 'denver',
-            'massachusetts', 'ma', 'boston',
-            'illinois', 'il', 'chicago',
-            'florida', 'fl', 'miami',
-            'oregon', 'or', 'portland',
-            'georgia', 'ga', 'atlanta',
-        ]
-        
-        # Non-US indicators (to exclude)
+        # Non-US indicators (to exclude) - check these FIRST
         non_us_indicators = [
-            'london', 'uk', 'united kingdom', 'england',
-            'canada', 'toronto', 'vancouver',
-            'europe', 'emea', 'apac', 'asia',
-            'india', 'bangalore', 'mumbai',
-            'singapore', 'australia', 'sydney',
-            'germany', 'berlin', 'france', 'paris',
+            'london', 'uk', 'united kingdom', 'england', 'scotland', 'wales', 'ireland',
+            'canada', 'toronto', 'vancouver', 'montreal', 'ottawa',
+            'europe', 'emea', 'apac', 'asia', 'latam', 'mena',
+            'india', 'bangalore', 'mumbai', 'delhi', 'hyderabad', 'pune',
+            'singapore', 'australia', 'sydney', 'melbourne',
+            'germany', 'berlin', 'munich', 'france', 'paris',
+            'netherlands', 'amsterdam', 'spain', 'barcelona', 'madrid',
+            'italy', 'rome', 'milan', 'sweden', 'stockholm',
+            'japan', 'tokyo', 'china', 'beijing', 'shanghai',
+            'brazil', 'mexico', 'argentina',
+            'israel', 'tel aviv', 'dubai', 'uae',
+            'remote - emea', 'remote - apac', 'remote - europe',
+            'remote - uk', 'remote - canada', 'remote - global',
+            'worldwide', 'global', 'international',
         ]
         
-        # Check for non-US locations first
+        # Check for non-US locations first (immediate exclusion)
         for indicator in non_us_indicators:
             if indicator in location_lower:
                 return False
+        
+        # US indicators - must match at least one
+        us_indicators = [
+            'united states', 'usa', 'u.s.', 
+            'remote us', 'remote - us', 'remote, us', 'us remote',
+            'remote (us)', 'remote usa', 'us only',
+            # States (full names)
+            'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado',
+            'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho',
+            'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana',
+            'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota',
+            'mississippi', 'missouri', 'montana', 'nebraska', 'nevada',
+            'new hampshire', 'new jersey', 'new mexico', 'new york',
+            'north carolina', 'north dakota', 'ohio', 'oklahoma', 'oregon',
+            'pennsylvania', 'rhode island', 'south carolina', 'south dakota',
+            'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington',
+            'west virginia', 'wisconsin', 'wyoming',
+            # Major cities
+            'san francisco', 'sf', 'bay area', 'palo alto', 'mountain view',
+            'los angeles', 'la', 'santa monica', 'san diego', 'sacramento',
+            'new york', 'nyc', 'manhattan', 'brooklyn', 'queens',
+            'seattle', 'chicago', 'austin', 'dallas', 'houston',
+            'boston', 'cambridge', 'denver', 'boulder', 'portland',
+            'miami', 'atlanta', 'phoenix', 'philadelphia', 'nashville',
+            'detroit', 'minneapolis', 'san jose', 'oakland', 'berkeley',
+            # State abbreviations (be careful with these)
+            ', ca', ', ny', ', tx', ', wa', ', ma', ', co', ', il', ', fl',
+            ', or', ', ga', ', az', ', pa', ', nc', ', va', ', tn',
+        ]
         
         # Check for US locations
         for indicator in us_indicators:
             if indicator in location_lower:
                 return True
         
-        # Default to False if we can't determine
+        # Default to False if we can't determine (strict filtering)
         return False
     
     def fetch_greenhouse_jobs(self, board_id: str) -> List[Dict]:
