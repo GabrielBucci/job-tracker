@@ -16,7 +16,7 @@ class JobTracker:
     
     def __init__(self):
         self.companies = {
-            # Greenhouse companies (most reliable)
+            # Greenhouse companies (most reliable, US-focused)
             'airbnb': {'type': 'greenhouse', 'id': 'airbnb'},
             'stripe': {'type': 'greenhouse', 'id': 'stripe'},
             'dropbox': {'type': 'greenhouse', 'id': 'dropbox'},
@@ -25,12 +25,14 @@ class JobTracker:
             'doordash': {'type': 'greenhouse', 'id': 'doordash'},
             'instacart': {'type': 'greenhouse', 'id': 'instacart'},
             'discord': {'type': 'greenhouse', 'id': 'discord'},
-            'ramp': {'type': 'greenhouse', 'id': 'ramp'},
-            'plaid': {'type': 'greenhouse', 'id': 'plaid'},
-            'notion': {'type': 'greenhouse', 'id': 'notion'},
             'figma': {'type': 'greenhouse', 'id': 'figma'},
             'airtable': {'type': 'greenhouse', 'id': 'airtable'},
             'databricks': {'type': 'greenhouse', 'id': 'databricks'},
+            'gusto': {'type': 'greenhouse', 'id': 'gusto'},
+            'lattice': {'type': 'greenhouse', 'id': 'lattice'},
+            'brex': {'type': 'greenhouse', 'id': 'brex'},
+            'checkr': {'type': 'greenhouse', 'id': 'checkr'},
+            'webflow': {'type': 'greenhouse', 'id': 'webflow'},
         }
     
     def is_us_location(self, location: str) -> bool:
@@ -133,32 +135,6 @@ class JobTracker:
             logger.error(f"Error fetching Greenhouse jobs for {board_id}: {e}")
             return []
     
-    def fetch_lever_jobs(self, company_id: str) -> List[Dict]:
-        """Fetch jobs from Lever API."""
-        try:
-            url = f"https://api.lever.co/v0/postings/{company_id}"
-            response = requests.get(url, timeout=10)
-            response.raise_for_status()
-            
-            jobs_data = response.json()
-            jobs = []
-            
-            for job in jobs_data:
-                jobs.append({
-                    'id': f"lv_{company_id}_{job['id']}",
-                    'title': job.get('text', 'N/A'),
-                    'company': company_id.replace('-', ' ').title(),
-                    'url': job.get('hostedUrl', ''),
-                    'location': job.get('categories', {}).get('location', 'Remote'),
-                    'source': 'lever'
-                })
-            
-            logger.info(f"Fetched {len(jobs)} jobs from Lever ({company_id})")
-            return jobs
-            
-        except requests.RequestException as e:
-            logger.error(f"Error fetching Lever jobs for {company_id}: {e}")
-            return []
     
     def get_jobs(self) -> List[Dict]:
         """
@@ -170,13 +146,9 @@ class JobTracker:
         for company_name, config in self.companies.items():
             if config['type'] == 'greenhouse':
                 jobs = self.fetch_greenhouse_jobs(config['id'])
-            elif config['type'] == 'lever':
-                jobs = self.fetch_lever_jobs(config['id'])
+                all_jobs.extend(jobs)
             else:
-                logger.warning(f"Unknown job board type for {company_name}")
-                continue
-            
-            all_jobs.extend(jobs)
+                logger.warning(f"Unknown job board type for {company_name}: {config['type']}")
         
         logger.info(f"Total jobs fetched: {len(all_jobs)}")
         return all_jobs
