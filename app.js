@@ -9,6 +9,7 @@ const API_BASE_URL = 'https://job-tracker-itsu.onrender.com';
 // State
 let allJobs = [];
 let currentFilter = 'all';
+let currentLocationFilter = 'all';
 let currentSort = 'newest';
 let lastCheckTime = null;
 
@@ -19,6 +20,7 @@ const statusMessage = document.getElementById('statusMessage');
 const jobsGrid = document.getElementById('jobsGrid');
 const emptyState = document.getElementById('emptyState');
 const companyFilter = document.getElementById('companyFilter');
+const locationFilter = document.getElementById('locationFilter');
 const sortBy = document.getElementById('sortBy');
 const jobCount = document.getElementById('jobCount');
 const jobsTitle = document.getElementById('jobsTitle');
@@ -47,6 +49,7 @@ async function init() {
     // Set up event listeners
     checkJobsBtn.addEventListener('click', handleCheckJobs);
     companyFilter.addEventListener('change', handleFilterChange);
+    locationFilter.addEventListener('change', handleLocationFilterChange);
     sortBy.addEventListener('change', handleSortChange);
 
     console.log('Job Tracker initialized');
@@ -121,8 +124,9 @@ async function handleCheckJobs() {
             // Store jobs
             allJobs = data.new_jobs || [];
 
-            // Update company filter
+            // Update filters
             updateCompanyFilter();
+            updateLocationFilter();
 
             // Display jobs
             displayJobs();
@@ -168,13 +172,119 @@ function updateCompanyFilter() {
 }
 
 /**
+ * Categorize location into a region/city
+ */
+function categorizeLocation(location) {
+    const loc = location.toLowerCase();
+
+    // Remote
+    if (loc.includes('remote')) return 'Remote';
+
+    // San Francisco Bay Area
+    if (loc.includes('san francisco') || loc.includes('sf') ||
+        loc.includes('bay area') || loc.includes('palo alto') ||
+        loc.includes('mountain view') || loc.includes('menlo park') ||
+        loc.includes('sunnyvale') || loc.includes('cupertino') ||
+        loc.includes('san jose') || loc.includes('oakland') ||
+        loc.includes('berkeley') || loc.includes('redwood city')) {
+        return 'San Francisco Bay Area';
+    }
+
+    // New York
+    if (loc.includes('new york') || loc.includes('nyc') ||
+        loc.includes('manhattan') || loc.includes('brooklyn') ||
+        loc.includes('queens')) {
+        return 'New York';
+    }
+
+    // Los Angeles
+    if (loc.includes('los angeles') || loc.includes('la') ||
+        loc.includes('santa monica') || loc.includes('venice')) {
+        return 'Los Angeles';
+    }
+
+    // Seattle
+    if (loc.includes('seattle') || loc.includes('bellevue') ||
+        loc.includes('redmond')) {
+        return 'Seattle';
+    }
+
+    // Austin
+    if (loc.includes('austin')) return 'Austin';
+
+    // Denver
+    if (loc.includes('denver') || loc.includes('boulder')) return 'Denver';
+
+    // Boston
+    if (loc.includes('boston') || loc.includes('cambridge')) return 'Boston';
+
+    // Chicago
+    if (loc.includes('chicago')) return 'Chicago';
+
+    // Portland
+    if (loc.includes('portland')) return 'Portland';
+
+    // Atlanta
+    if (loc.includes('atlanta')) return 'Atlanta';
+
+    // Miami
+    if (loc.includes('miami')) return 'Miami';
+
+    // San Diego
+    if (loc.includes('san diego')) return 'San Diego';
+
+    // Phoenix
+    if (loc.includes('phoenix')) return 'Phoenix';
+
+    // Dallas
+    if (loc.includes('dallas')) return 'Dallas';
+
+    // Houston
+    if (loc.includes('houston')) return 'Houston';
+
+    // Nashville
+    if (loc.includes('nashville')) return 'Nashville';
+
+    // Philadelphia
+    if (loc.includes('philadelphia')) return 'Philadelphia';
+
+    // Default: return the original location
+    return location;
+}
+
+/**
+ * Update location filter dropdown with available locations
+ */
+function updateLocationFilter() {
+    const locations = [...new Set(allJobs.map(job => categorizeLocation(job.location)))].sort();
+
+    // Clear existing options except "All Locations"
+    locationFilter.innerHTML = '<option value="all">All Locations</option>';
+
+    // Add location options
+    locations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.textContent = location;
+        locationFilter.appendChild(option);
+    });
+}
+
+/**
  * Display jobs in the grid
  */
 function displayJobs() {
-    // Filter jobs
+    // Filter jobs by company
     let filteredJobs = allJobs;
     if (currentFilter !== 'all') {
-        filteredJobs = allJobs.filter(job => job.company === currentFilter);
+        filteredJobs = filteredJobs.filter(job => job.company === currentFilter);
+    }
+
+    // Filter jobs by location
+    if (currentLocationFilter !== 'all') {
+        filteredJobs = filteredJobs.filter(job =>
+            categorizeLocation(job.location) === currentLocationFilter
+        );
     }
 
     // Sort jobs
@@ -185,7 +295,15 @@ function displayJobs() {
 
     // Update title
     if (filteredJobs.length > 0) {
-        jobsTitle.textContent = currentFilter === 'all' ? 'New Jobs' : `${currentFilter} Jobs`;
+        let title = 'New Jobs';
+        if (currentFilter !== 'all' && currentLocationFilter !== 'all') {
+            title = `${currentFilter} Jobs in ${currentLocationFilter}`;
+        } else if (currentFilter !== 'all') {
+            title = `${currentFilter} Jobs`;
+        } else if (currentLocationFilter !== 'all') {
+            title = `Jobs in ${currentLocationFilter}`;
+        }
+        jobsTitle.textContent = title;
     }
 
     // Clear grid
@@ -253,17 +371,32 @@ function sortJobs(jobs) {
             return sorted;
         case 'company':
             return sorted.sort((a, b) => a.company.localeCompare(b.company));
+        case 'location':
+            return sorted.sort((a, b) => {
+                const locA = categorizeLocation(a.location);
+                const locB = categorizeLocation(b.location);
+                return locA.localeCompare(locB);
+            });
         default:
             return sorted;
     }
 }
 
 /**
- * Handle filter change
+ * Handle company filter change
  */
 function handleFilterChange(e) {
     currentFilter = e.target.value;
-    console.log('Filter changed to:', currentFilter);
+    console.log('Company filter changed to:', currentFilter);
+    displayJobs();
+}
+
+/**
+ * Handle location filter change
+ */
+function handleLocationFilterChange(e) {
+    currentLocationFilter = e.target.value;
+    console.log('Location filter changed to:', currentLocationFilter);
     displayJobs();
 }
 
