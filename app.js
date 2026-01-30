@@ -3,8 +3,13 @@
  * Connects to the Job Tracker API and provides a beautiful UI for tracking jobs
  */
 
-// Configuration
-const API_BASE_URL = 'https://job-tracker-itsu.onrender.com';
+// Configuration - Auto-detect environment
+const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+    ? 'http://127.0.0.1:8000'  // Local development
+    : 'https://job-tracker-itsu.onrender.com';  // Production
+
+console.log('🎰 Resume Roulette - Environment:', window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' ? 'LOCAL' : 'PRODUCTION');
+console.log('📡 API URL:', API_BASE_URL);
 
 // State
 let allJobs = [];
