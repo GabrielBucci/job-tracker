@@ -121,8 +121,10 @@ async function handleCheckJobs() {
             lastCheckTime = new Date(data.timestamp);
             lastCheck.textContent = formatTimeAgo(lastCheckTime);
 
-            // Store jobs
-            allJobs = data.new_jobs || [];
+            // Append new jobs to existing jobs (don't replace!)
+            if (data.new_jobs && data.new_jobs.length > 0) {
+                allJobs = [...data.new_jobs, ...allJobs]; // New jobs at the top
+            }
 
             // Update filters
             updateCompanyFilter();
