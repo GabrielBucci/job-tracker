@@ -4,12 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Track new job postings from multiple companies in real-time">
-    <title>Job Tracker - Find Your Next Opportunity</title>
+    <meta name="description"
+        content="Spin the wheel of employment despair - Track new job postings from multiple companies">
+    <title>Resume Roulette 🎰 - Spin to Win (a job, maybe)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Righteous&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="roulette-extras.css">
 </head>
 
 <body>
@@ -18,18 +22,20 @@
         <header class="header">
             <div class="header-content">
                 <h1 class="title">
-                    <span class="icon">💼</span>
-                    Job Tracker
+                    <span class="icon spinning-dice">🎲</span>
+                    Resume Roulette
+                    <span class="icon spinning-dice">🎰</span>
                 </h1>
-                <p class="subtitle">Discover new opportunities from top companies</p>
+                <p class="subtitle">Where dreams go to get auto-rejected ✨</p>
+                <p class="subtitle-small">May the odds be ever in your favor (they won't be)</p>
             </div>
             <div class="stats-mini" id="statsBar">
                 <div class="stat-item">
-                    <span class="stat-label">Total Jobs Seen</span>
+                    <span class="stat-label">Souls Tracked</span>
                     <span class="stat-value" id="totalSeen">-</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Last Check</span>
+                    <span class="stat-label">Last Spin</span>
                     <span class="stat-value" id="lastCheck">Never</span>
                 </div>
             </div>
@@ -38,8 +44,8 @@
         <!-- Control Panel -->
         <section class="control-panel">
             <button class="btn-primary" id="checkJobsBtn">
-                <span class="btn-icon">🔍</span>
-                Check for New Jobs
+                <span class="btn-icon">🎰</span>
+                Spin the Wheel of Rejection
             </button>
             <div class="filters">
                 <select id="companyFilter" class="filter-select">
@@ -75,34 +81,35 @@
                 <!-- Jobs will be inserted here dynamically -->
             </div>
             <div class="empty-state" id="emptyState">
-                <div class="empty-icon">📭</div>
-                <h3>No Jobs Yet</h3>
-                <p>Click "Check for New Jobs" to start tracking opportunities</p>
+                <div class="empty-icon">🎲</div>
+                <h3>The Wheel Awaits...</h3>
+                <p>Click "Spin the Wheel" to discover which companies will ghost you today!</p>
+                <img src="https://media.giphy.com/media/l3vR85PnGsBwu1PFK/giphy.gif" alt="Spinning" class="empty-gif">
             </div>
         </section>
 
         <!-- Statistics Dashboard -->
         <section class="stats-dashboard">
-            <h2>Statistics</h2>
+            <h2>🎰 The Damage Report</h2>
             <div class="stats-grid" id="statsGrid">
                 <div class="stat-card">
                     <div class="stat-card-icon">📊</div>
                     <div class="stat-card-content">
-                        <span class="stat-card-label">Total Jobs Fetched</span>
+                        <span class="stat-card-label">Jobs in the Wild</span>
                         <span class="stat-card-value" id="totalFetched">-</span>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-icon">✨</div>
                     <div class="stat-card-content">
-                        <span class="stat-card-label">New Jobs Found</span>
+                        <span class="stat-card-label">Fresh Rejections</span>
                         <span class="stat-card-value" id="newJobsFound">-</span>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-card-icon">🏢</div>
                     <div class="stat-card-content">
-                        <span class="stat-card-label">Companies Tracked</span>
+                        <span class="stat-card-label">Companies Ignoring You</span>
                         <span class="stat-card-value" id="companiesChecked">-</span>
                     </div>
                 </div>
@@ -111,11 +118,12 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <p>Powered by Job Tracker API v1.0.0</p>
+            <p>Powered by Resume Roulette™ - Your Daily Dose of Career Chaos 🎲</p>
             <p class="api-status">
                 <span class="status-dot" id="apiStatus"></span>
                 <span id="apiStatusText">Checking API...</span>
             </p>
+            <p class="footer-tagline">Remember: Every "no" is just practice for the next "no" 💪</p>
         </footer>
     </div>
 

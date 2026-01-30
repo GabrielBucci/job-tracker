@@ -1,0 +1,245 @@
+/* ===================================
+   Resume Roulette - Fun Animations & Extras
+   =================================== */
+
+/* Spinning dice animation */
+@keyframes spin-dice {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(90deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    75% {
+        transform: rotate(270deg);
+    }
+}
+
+.spinning-dice {
+    display: inline-block;
+    animation: spin-dice 3s ease-in-out infinite;
+}
+
+/* Playful title font */
+.title {
+    font-family: 'Righteous', cursive !important;
+    font-size: 3rem;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    text-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+}
+
+/* Subtitle styling */
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.subtitle-small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+
+/* Empty state GIF */
+.empty-gif {
+    max-width: 300px;
+    margin: var(--spacing-md) auto 0;
+    border-radius: var(--radius-md);
+    opacity: 0.8;
+}
+
+/* Animated button with roulette spin */
+.btn-primary {
+    background: var(--accent-gradient);
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-lg), var(--shadow-glow), var(--shadow-gold);
+    animation: gradient-shift 1s ease infinite, shake 0.5s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateY(-2px) scale(1.05) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-2px) scale(1.05) rotate(-2deg);
+    }
+
+    75% {
+        transform: translateY(-2px) scale(1.05) rotate(2deg);
+    }
+}
+
+/* Job cards with playful hover */
+.job-card:hover {
+    transform: translateY(-4px) rotate(1deg);
+    box-shadow: var(--shadow-lg), var(--shadow-gold);
+    border-color: var(--accent-secondary);
+}
+
+.job-badge {
+    background: var(--roulette-spin);
+    background-size: 200% 100%;
+    animation: badge-slide 2s linear infinite;
+}
+
+@keyframes badge-slide {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Stats cards with glow effect */
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md), var(--shadow-gold);
+    border-color: var(--accent-secondary);
+}
+
+.stat-card-icon {
+    font-size: 2.5rem;
+    filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.5));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Footer tagline */
+.footer-tagline {
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Loading spinner with roulette colors */
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto var(--spacing-md);
+    border: 4px solid rgba(239, 68, 68, 0.1);
+    border-top-color: var(--accent-primary);
+    border-right-color: var(--accent-secondary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Playful filter select hover */
+.filter-select:hover {
+    border-color: var(--accent-secondary);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+/* Animated background with roulette colors */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse-bg 10s ease-in-out infinite;
+}
+
+@keyframes pulse-bg {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Status message with extra flair */
+.status-message.success {
+    display: block;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    color: var(--success);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.status-message.error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error);
+    color: var(--error);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.status-message.info {
+    display: block;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--accent-secondary);
+    color: var(--accent-secondary);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+}
