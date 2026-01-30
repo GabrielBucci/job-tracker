@@ -5,9 +5,12 @@ Provides endpoints to check for new jobs and view status.
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from typing import Dict, List
 import logging
 from datetime import datetime
+import os
 
 from tracker import get_jobs
 from storage import find_new_jobs
@@ -20,6 +23,19 @@ app = FastAPI(
     description="Track new job postings from multiple companies",
     version="1.0.0"
 )
+
+# Add CORS middleware to allow frontend requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Serve static files (frontend) if they exist
+if os.path.exists("index.html"):
+    app.mount("/static", StaticFiles(directory=".", html=True), name="static")
 
 
 @app.get("/")
@@ -34,8 +50,9 @@ async def root() -> Dict:
         "version": "1.0.0",
         "timestamp": datetime.utcnow().isoformat(),
         "endpoints": {
-            "/": "API status",
+            "/": "Web interface (if available) or API status",
             "/check": "Check for new jobs",
+            "/stats": "Get tracking statistics",
             "/docs": "API documentation"
         }
     }

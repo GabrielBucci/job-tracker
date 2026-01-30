@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track new job postings from multiple companies in real-time">
+    <title>Job Tracker - Find Your Next Opportunity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <span class="icon">💼</span>
+                    Job Tracker
+                </h1>
+                <p class="subtitle">Discover new opportunities from top companies</p>
+            </div>
+            <div class="stats-mini" id="statsBar">
+                <div class="stat-item">
+                    <span class="stat-label">Total Jobs Seen</span>
+                    <span class="stat-value" id="totalSeen">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Check</span>
+                    <span class="stat-value" id="lastCheck">Never</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Control Panel -->
+        <section class="control-panel">
+            <button class="btn-primary" id="checkJobsBtn">
+                <span class="btn-icon">🔍</span>
+                Check for New Jobs
+            </button>
+            <div class="filters">
+                <select id="companyFilter" class="filter-select">
+                    <option value="all">All Companies</option>
+                </select>
+                <select id="sortBy" class="filter-select">
+                    <option value="newest">Newest First</option>
+                    <option value="company">By Company</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Status Message -->
+        <div class="status-message" id="statusMessage"></div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Checking for new jobs...</p>
+        </div>
+
+        <!-- Jobs Grid -->
+        <section class="jobs-section">
+            <div class="section-header">
+                <h2 id="jobsTitle">Recent Jobs</h2>
+                <span class="job-count" id="jobCount">0 jobs</span>
+            </div>
+            <div class="jobs-grid" id="jobsGrid">
+                <!-- Jobs will be inserted here dynamically -->
+            </div>
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">📭</div>
+                <h3>No Jobs Yet</h3>
+                <p>Click "Check for New Jobs" to start tracking opportunities</p>
+            </div>
+        </section>
+
+        <!-- Statistics Dashboard -->
+        <section class="stats-dashboard">
+            <h2>Statistics</h2>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">📊</div>
+                    <div class="stat-card-content">
+                        <span class="stat-card-label">Total Jobs Fetched</span>
+                        <span class="stat-card-value" id="totalFetched">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">✨</div>
+                    <div class="stat-card-content">
+                        <span class="stat-card-label">New Jobs Found</span>
+                        <span class="stat-card-value" id="newJobsFound">-</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">🏢</div>
+                    <div class="stat-card-content">
+                        <span class="stat-card-label">Companies Tracked</span>
+                        <span class="stat-card-value" id="companiesChecked">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by Job Tracker API v1.0.0</p>
+            <p class="api-status">
+                <span class="status-dot" id="apiStatus"></span>
+                <span id="apiStatusText">Checking API...</span>
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
