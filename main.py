@@ -89,6 +89,17 @@ async def get_styles():
     return Response(content="", status_code=404)
 
 
+@app.get("/roulette-extras.css")
+async def get_roulette_extras():
+    """Serve the Resume Roulette extras CSS file"""
+    from fastapi.responses import Response
+    if os.path.exists("roulette-extras.css"):
+        with open("roulette-extras.css", "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/css")
+    return Response(content="", status_code=404)
+
+
 @app.get("/app.js")
 async def get_app_js():
     """Serve the JavaScript file"""
