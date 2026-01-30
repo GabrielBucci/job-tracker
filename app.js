@@ -57,7 +57,7 @@ async function init() {
  */
 async function checkAPIStatus() {
     try {
-        const response = await fetch(`${API_BASE_URL}/`);
+        const response = await fetch(`${API_BASE_URL}/api/status`);
         const data = await response.json();
 
         if (data.status === 'online') {

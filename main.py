@@ -4,7 +4,7 @@ Provides endpoints to check for new jobs and view status.
 """
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from typing import Dict, List
@@ -33,15 +33,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve static files (frontend) if they exist
-if os.path.exists("index.html"):
-    app.mount("/static", StaticFiles(directory=".", html=True), name="static")
-
 
 @app.get("/")
-async def root() -> Dict:
+async def root():
     """
-    Health check endpoint.
+    Serve the frontend web interface.
+    """
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    else:
+        return {
+            "status": "online",
+            "service": "Job Tracker API",
+            "version": "1.0.0",
+            "timestamp": datetime.utcnow().isoformat(),
+            "endpoints": {
+                "/": "Web interface",
+                "/api/status": "API status",
+                "/check": "Check for new jobs",
+                "/stats": "Get tracking statistics",
+                "/docs": "API documentation"
+            }
+        }
+
+
+@app.get("/api/status")
+async def api_status() -> Dict:
+    """
+    API health check endpoint.
     Returns API status and basic information.
     """
     return {
@@ -50,12 +69,35 @@ async def root() -> Dict:
         "version": "1.0.0",
         "timestamp": datetime.utcnow().isoformat(),
         "endpoints": {
-            "/": "Web interface (if available) or API status",
+            "/": "Web interface",
+            "/api/status": "API status",
             "/check": "Check for new jobs",
             "/stats": "Get tracking statistics",
             "/docs": "API documentation"
         }
     }
+
+
+@app.get("/styles.css")
+async def get_styles():
+    """Serve the CSS file"""
+    from fastapi.responses import Response
+    if os.path.exists("styles.css"):
+        with open("styles.css", "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/css")
+    return Response(content="", status_code=404)
+
+
+@app.get("/app.js")
+async def get_app_js():
+    """Serve the JavaScript file"""
+    from fastapi.responses import Response
+    if os.path.exists("app.js"):
+        with open("app.js", "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="application/javascript")
+    return Response(content="", status_code=404)
 
 
 @app.get("/check")
