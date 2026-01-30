@@ -8,7 +8,7 @@ A FastAPI-based job tracker that monitors job postings from Greenhouse and Lever
 - 🆕 Detects new job listings automatically
 - 💾 Persistent storage using JSON
 - 🚀 FastAPI REST API
-- ☁️ Ready for Railway deployment
+- ☁️ Ready for Render deployment
 - 🤖 Prepared for Claude AI integration
 
 ## Local Setup
@@ -58,12 +58,14 @@ self.companies = {
 }
 ```
 
-## Deployment to Railway
+## Deployment to Render
 
 1. Push code to GitHub
-2. Connect Railway to your repository
-3. Set start command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-4. Deploy and get your public URL
+2. Connect Render to your repository
+3. Configure:
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+4. Deploy and get your public URL (free tier available!)
 
 ## Project Structure
 
