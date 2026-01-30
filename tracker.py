@@ -16,13 +16,68 @@ class JobTracker:
     
     def __init__(self):
         self.companies = {
-            # Add companies here in format: 'company_name': {'type': 'greenhouse/lever', 'id': 'board_id'}
-            # Example Greenhouse companies
+            # Greenhouse companies (most reliable)
             'airbnb': {'type': 'greenhouse', 'id': 'airbnb'},
             'stripe': {'type': 'greenhouse', 'id': 'stripe'},
-            # Example Lever companies
-            'netflix': {'type': 'lever', 'id': 'netflix'},
+            'dropbox': {'type': 'greenhouse', 'id': 'dropbox'},
+            'coinbase': {'type': 'greenhouse', 'id': 'coinbase'},
+            'robinhood': {'type': 'greenhouse', 'id': 'robinhood'},
+            'doordash': {'type': 'greenhouse', 'id': 'doordash'},
+            'instacart': {'type': 'greenhouse', 'id': 'instacart'},
+            'discord': {'type': 'greenhouse', 'id': 'discord'},
+            'ramp': {'type': 'greenhouse', 'id': 'ramp'},
+            'plaid': {'type': 'greenhouse', 'id': 'plaid'},
+            'notion': {'type': 'greenhouse', 'id': 'notion'},
+            'figma': {'type': 'greenhouse', 'id': 'figma'},
+            'airtable': {'type': 'greenhouse', 'id': 'airtable'},
+            'databricks': {'type': 'greenhouse', 'id': 'databricks'},
         }
+    
+    def is_us_location(self, location: str) -> bool:
+        """Check if a location is in the US."""
+        if not location:
+            return True  # Include jobs with no location specified
+        
+        location_lower = location.lower()
+        
+        # US indicators
+        us_indicators = [
+            'united states', 'usa', 'u.s.', 'us ',
+            'remote', 'remote us', 'remote - us',
+            'california', 'ca', 'san francisco', 'sf', 'bay area',
+            'new york', 'ny', 'nyc', 'manhattan',
+            'washington', 'seattle', 'wa',
+            'texas', 'tx', 'austin', 'dallas',
+            'colorado', 'co', 'denver',
+            'massachusetts', 'ma', 'boston',
+            'illinois', 'il', 'chicago',
+            'florida', 'fl', 'miami',
+            'oregon', 'or', 'portland',
+            'georgia', 'ga', 'atlanta',
+        ]
+        
+        # Non-US indicators (to exclude)
+        non_us_indicators = [
+            'london', 'uk', 'united kingdom', 'england',
+            'canada', 'toronto', 'vancouver',
+            'europe', 'emea', 'apac', 'asia',
+            'india', 'bangalore', 'mumbai',
+            'singapore', 'australia', 'sydney',
+            'germany', 'berlin', 'france', 'paris',
+        ]
+        
+        # Check for non-US locations first
+        for indicator in non_us_indicators:
+            if indicator in location_lower:
+                return False
+        
+        # Check for US locations
+        for indicator in us_indicators:
+            if indicator in location_lower:
+                return True
+        
+        # Default to False if we can't determine
+        return False
     
     def fetch_greenhouse_jobs(self, board_id: str) -> List[Dict]:
         """Fetch jobs from Greenhouse API."""
@@ -35,16 +90,22 @@ class JobTracker:
             jobs = []
             
             for job in jobs_data.get('jobs', []):
+                location = job.get('location', {}).get('name', 'Remote')
+                
+                # Filter for US locations only
+                if not self.is_us_location(location):
+                    continue
+                
                 jobs.append({
                     'id': f"gh_{board_id}_{job['id']}",
                     'title': job.get('title', 'N/A'),
                     'company': board_id.replace('-', ' ').title(),
                     'url': job.get('absolute_url', ''),
-                    'location': job.get('location', {}).get('name', 'Remote'),
+                    'location': location,
                     'source': 'greenhouse'
                 })
             
-            logger.info(f"Fetched {len(jobs)} jobs from Greenhouse ({board_id})")
+            logger.info(f"Fetched {len(jobs)} US jobs from Greenhouse ({board_id})")
             return jobs
             
         except requests.RequestException as e:
