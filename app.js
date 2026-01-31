@@ -56,6 +56,11 @@ async function init() {
     // Set up event listeners
     checkJobsBtn.addEventListener('click', handleCheckJobs);
     searchInput.addEventListener('input', handleSearchInput);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleCheckJobs();
+        }
+    });
     companyFilter.addEventListener('change', handleFilterChange);
     locationFilter.addEventListener('change', handleLocationFilterChange);
     sortBy.addEventListener('change', handleSortChange);
