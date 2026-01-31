@@ -134,9 +134,13 @@ async function handleCheckJobs() {
             lastCheckTime = new Date(data.timestamp);
             lastCheck.textContent = formatTimeAgo(lastCheckTime);
 
-            // Append new jobs to existing jobs (don't replace!)
-            if (data.new_jobs && data.new_jobs.length > 0) {
-                allJobs = [...data.new_jobs, ...allJobs]; // New jobs at the top
+            // Store all active jobs
+            if (data.all_jobs) {
+                // Backend sent all active jobs (new behavior)
+                allJobs = data.all_jobs;
+            } else if (data.new_jobs && data.new_jobs.length > 0) {
+                // Fallback for older backend (append logic)
+                allJobs = [...data.new_jobs, ...allJobs];
             }
 
             // Update filters

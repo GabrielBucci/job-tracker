@@ -137,7 +137,8 @@ async def check_jobs() -> Dict:
                 "new_jobs_found": len(new_jobs),
                 "companies_checked": len(set(job.get('company', 'Unknown') for job in all_jobs))
             },
-            "new_jobs": new_jobs
+            "new_jobs": new_jobs,
+            "all_jobs": all_jobs
         }
         
         logger.info(f"Check complete: {len(new_jobs)} new jobs found out of {len(all_jobs)} total")
