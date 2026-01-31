@@ -167,9 +167,9 @@ body::before {
    =================================== */
 .control-panel {
     display: flex;
+    flex-direction: column;
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
-    flex-wrap: wrap;
     align-items: center;
 }
 

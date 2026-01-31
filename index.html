@@ -14,6 +14,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="roulette-extras.css">
+    <link rel="stylesheet" href="wheel.css">
 </head>
 
 <body>
@@ -31,8 +32,8 @@
             </div>
             <div class="stats-mini" id="statsBar">
                 <div class="stat-item">
-                    <span class="stat-label">Souls Tracked</span>
-                    <span class="stat-value" id="totalSeen">-</span>
+                    <span class="stat-label">Interviews Generated</span>
+                    <span class="stat-value" id="totalSeen">0</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">Last Spin</span>
@@ -43,10 +44,23 @@
 
         <!-- Control Panel -->
         <section class="control-panel">
-            <button class="btn-primary" id="checkJobsBtn">
-                <span class="btn-icon">🎰</span>
-                Spin the Wheel of Rejection
-            </button>
+            <div class="wheel-container" id="wheelContainer">
+                <!-- Custom Roulette Wheel GIF -->
+                <img src="wheel-transparent.gif" class="roulette-wheel" id="rouletteWheel"
+                    alt="Spinning Roulette Wheel" />
+
+                <!-- Pointer -->
+                <div class="wheel-pointer">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <polygon points="20,35 30,20 20,22 10,20" fill="#fbbf24" stroke="#f59e0b" stroke-width="2" />
+                    </svg>
+                </div>
+
+                <!-- Call to action text -->
+                <div class="wheel-cta">
+                    <span class="wheel-cta-text">Spin the Wheel of Rejection</span>
+                </div>
+            </div>
             <div class="filters">
                 <input type="text" id="searchInput" class="search-input"
                     placeholder="🔍 Search jobs (e.g., sales, marketing)..." />

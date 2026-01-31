@@ -100,6 +100,49 @@ async def get_roulette_extras():
     return Response(content="", status_code=404)
 
 
+@app.get("/wheel.css")
+async def get_wheel_css():
+    """Serve the wheel CSS file"""
+    from fastapi.responses import Response
+    if os.path.exists("wheel.css"):
+        with open("wheel.css", "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="text/css")
+    return Response(content="", status_code=404)
+
+
+@app.get("/roulette-wheel.mp4")
+async def get_roulette_video():
+    """Serve the roulette wheel video"""
+    if os.path.exists("roulette-wheel.mp4"):
+        return FileResponse("roulette-wheel.mp4", media_type="video/mp4")
+    return Response(content="", status_code=404)
+
+
+@app.get("/wheel-animation.mp4")
+async def get_wheel_animation():
+    """Serve the wheel animation video"""
+    if os.path.exists("wheel-animation.mp4"):
+        return FileResponse("wheel-animation.mp4", media_type="video/mp4")
+    return Response(content="", status_code=404)
+
+
+@app.get("/wheel-spinning.gif")
+async def get_wheel_gif():
+    """Serve the wheel spinning GIF"""
+    if os.path.exists("wheel-spinning.gif"):
+        return FileResponse("wheel-spinning.gif", media_type="image/gif")
+    return Response(content="", status_code=404)
+
+
+@app.get("/wheel-transparent.gif")
+async def get_wheel_transparent():
+    """Serve the transparent wheel GIF"""
+    if os.path.exists("wheel-transparent.gif"):
+        return FileResponse("wheel-transparent.gif", media_type="image/gif")
+    return Response(content="", status_code=404)
+
+
 @app.get("/app.js")
 async def get_app_js():
     """Serve the JavaScript file"""

@@ -12,8 +12,8 @@ import os
 def main():
     print("🎰 Starting Resume Roulette - Local Development Server")
     print("=" * 60)
-    print("📍 URL: http://127.0.0.1:8000")
-    print("📚 API Docs: http://127.0.0.1:8000/docs")
+    print("📍 URL: http://localhost:8000")
+    print("📚 API Docs: http://localhost:8000/docs")
     print("🔄 Hot Reload: ENABLED")
     print("=" * 60)
     print("\n✨ Make changes to any file and they'll auto-reload!")
@@ -25,7 +25,7 @@ def main():
             "uvicorn",
             "main:app",
             "--reload",
-            "--host", "127.0.0.1",
+            "--host", "localhost",
             "--port", "8000"
         ], check=True)
     except KeyboardInterrupt:

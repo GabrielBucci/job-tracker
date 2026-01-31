@@ -20,7 +20,7 @@ let currentSort = 'newest';
 let lastCheckTime = null;
 
 // DOM Elements
-const checkJobsBtn = document.getElementById('checkJobsBtn');
+const checkJobsBtn = document.getElementById('rouletteWheel');
 const loadingState = document.getElementById('loadingState');
 const statusMessage = document.getElementById('statusMessage');
 const jobsGrid = document.getElementById('jobsGrid');
@@ -52,6 +52,9 @@ async function init() {
 
     // Load statistics
     await loadStats();
+
+    // Display initial empty state (shows GIF)
+    displayJobs();
 
     // Set up event listeners
     checkJobsBtn.addEventListener('click', handleCheckJobs);
@@ -98,12 +101,12 @@ async function loadStats() {
         const data = await response.json();
 
         if (data.status === 'success') {
-            totalSeen.textContent = data.stats.total_jobs_seen.toLocaleString();
+            totalSeen.textContent = '0';  // Always show 0 for interviews generated
             console.log('Stats loaded:', data.stats);
         }
     } catch (error) {
         console.error('Failed to load stats:', error);
-        totalSeen.textContent = 'Error';
+        totalSeen.textContent = '0';
     }
 }
 
@@ -113,8 +116,23 @@ async function loadStats() {
 async function handleCheckJobs() {
     console.log('Checking for new jobs...');
 
-    // Disable button and show loading
-    checkJobsBtn.disabled = true;
+    // Get wheel elements
+    const wheel = document.getElementById('rouletteWheel');
+    const wheelContainer = document.getElementById('wheelContainer');
+
+    // Disable wheel
+    wheelContainer.classList.add('disabled');
+
+    // Add visual spinning effect (GIF already animates automatically)
+    wheel.classList.add('spinning');
+
+    // Wait for spin animation to complete (4 seconds)
+    await new Promise(resolve => setTimeout(resolve, 4000));
+
+    // Remove spinning class
+    wheel.classList.remove('spinning');
+
+    // Show loading state
     loadingState.classList.add('active');
     statusMessage.className = 'status-message';
 
@@ -153,11 +171,10 @@ async function handleCheckJobs() {
             // Reload overall stats
             await loadStats();
 
-            // Show success message
-            const message = data.summary.new_jobs_found > 0
-                ? `Found ${data.summary.new_jobs_found} new job${data.summary.new_jobs_found === 1 ? '' : 's'}!`
-                : 'No new jobs found. All jobs have been seen before.';
-            showStatus(message, data.summary.new_jobs_found > 0 ? 'success' : 'info');
+            // Show success message - display total jobs fetched
+            const totalJobs = data.summary.total_jobs_fetched;
+            const message = `Found ${totalJobs.toLocaleString()} job${totalJobs === 1 ? '' : 's'}!`;
+            showStatus(message, 'success');
 
         } else {
             throw new Error(data.message || 'Failed to fetch jobs');
@@ -168,7 +185,10 @@ async function handleCheckJobs() {
         showStatus('Failed to check for jobs. Please try again.', 'error');
     } finally {
         loadingState.classList.remove('active');
-        checkJobsBtn.disabled = false;
+
+        // Re-enable wheel
+        const wheelContainer = document.getElementById('wheelContainer');
+        wheelContainer.classList.remove('disabled');
     }
 }
 
@@ -395,7 +415,6 @@ function createJobCard(job) {
             <span class="job-badge">New</span>
         </div>
         <div class="job-footer">
-            <span class="job-source">${escapeHtml(job.source)}</span>
             <a href="${escapeHtml(job.url)}" target="_blank" rel="noopener noreferrer" class="job-link">
                 View Job →
             </a>
@@ -420,8 +439,8 @@ function sortJobs(jobs) {
 
     switch (currentSort) {
         case 'newest':
-            // Jobs are already in newest first order from API
-            return sorted;
+            // Shuffle to show variety of companies instead of grouping by company
+            return shuffleArray(sorted);
         case 'company':
             return sorted.sort((a, b) => a.company.localeCompare(b.company));
         case 'location':
@@ -433,6 +452,18 @@ function sortJobs(jobs) {
         default:
             return sorted;
     }
+}
+
+/**
+ * Shuffle array for variety in job display
+ */
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
 }
 
 /**
