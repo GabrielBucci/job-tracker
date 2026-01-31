@@ -230,6 +230,34 @@ body::before {
     gap: var(--spacing-sm);
     flex: 1;
     justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    transition: all var(--transition-fast);
+    min-width: 250px;
+    flex: 1;
+}
+
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+.search-input:hover {
+    border-color: var(--accent-primary);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .filter-select {

@@ -15,6 +15,7 @@ console.log('📡 API URL:', API_BASE_URL);
 let allJobs = [];
 let currentFilter = 'all';
 let currentLocationFilter = 'all';
+let currentSearchKeyword = '';
 let currentSort = 'newest';
 let lastCheckTime = null;
 
@@ -24,6 +25,7 @@ const loadingState = document.getElementById('loadingState');
 const statusMessage = document.getElementById('statusMessage');
 const jobsGrid = document.getElementById('jobsGrid');
 const emptyState = document.getElementById('emptyState');
+const searchInput = document.getElementById('searchInput');
 const companyFilter = document.getElementById('companyFilter');
 const locationFilter = document.getElementById('locationFilter');
 const sortBy = document.getElementById('sortBy');
@@ -53,6 +55,7 @@ async function init() {
 
     // Set up event listeners
     checkJobsBtn.addEventListener('click', handleCheckJobs);
+    searchInput.addEventListener('input', handleSearchInput);
     companyFilter.addEventListener('change', handleFilterChange);
     locationFilter.addEventListener('change', handleLocationFilterChange);
     sortBy.addEventListener('change', handleSortChange);
@@ -281,8 +284,16 @@ function updateLocationFilter() {
  * Display jobs in the grid
  */
 function displayJobs() {
-    // Filter jobs by company
+    // Filter jobs by keyword search
     let filteredJobs = allJobs;
+    if (currentSearchKeyword) {
+        const keyword = currentSearchKeyword.toLowerCase();
+        filteredJobs = filteredJobs.filter(job =>
+            job.title.toLowerCase().includes(keyword)
+        );
+    }
+
+    // Filter jobs by company
     if (currentFilter !== 'all') {
         filteredJobs = filteredJobs.filter(job => job.company === currentFilter);
     }
@@ -303,7 +314,11 @@ function displayJobs() {
     // Update title
     if (filteredJobs.length > 0) {
         let title = 'New Jobs';
-        if (currentFilter !== 'all' && currentLocationFilter !== 'all') {
+        if (currentSearchKeyword) {
+            title = `"${currentSearchKeyword}" Jobs`;
+            if (currentFilter !== 'all') title += ` at ${currentFilter}`;
+            if (currentLocationFilter !== 'all') title += ` in ${currentLocationFilter}`;
+        } else if (currentFilter !== 'all' && currentLocationFilter !== 'all') {
             title = `${currentFilter} Jobs in ${currentLocationFilter}`;
         } else if (currentFilter !== 'all') {
             title = `${currentFilter} Jobs`;
@@ -387,6 +402,15 @@ function sortJobs(jobs) {
         default:
             return sorted;
     }
+}
+
+/**
+ * Handle search input
+ */
+function handleSearchInput(e) {
+    currentSearchKeyword = e.target.value.trim();
+    console.log('Search keyword:', currentSearchKeyword);
+    displayJobs();
 }
 
 /**
