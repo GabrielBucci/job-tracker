@@ -340,6 +340,28 @@ function displayJobs() {
     if (filteredJobs.length === 0) {
         emptyState.classList.add('active');
         jobsGrid.style.display = 'none';
+
+        // Update empty state message based on context
+        const emptyIcon = emptyState.querySelector('.empty-icon');
+        const emptyTitle = emptyState.querySelector('h3');
+        const emptyText = emptyState.querySelector('p');
+
+        if (allJobs.length === 0) {
+            // No jobs loaded at all
+            emptyIcon.textContent = '🎲';
+            emptyTitle.textContent = 'The Wheel Awaits...';
+            emptyText.textContent = 'Click "Spin the Wheel" to discover which companies will ghost you today!';
+        } else if (currentSearchKeyword) {
+            // Jobs loaded but search returned nothing
+            emptyIcon.textContent = '🔍';
+            emptyTitle.textContent = 'No Matching Jobs';
+            emptyText.textContent = `No jobs found matching "${currentSearchKeyword}". Try a different keyword or clear the search.`;
+        } else {
+            // Jobs loaded but filters returned nothing
+            emptyIcon.textContent = '🎯';
+            emptyTitle.textContent = 'No Jobs Match Filters';
+            emptyText.textContent = 'Try adjusting your company or location filters.';
+        }
     } else {
         emptyState.classList.remove('active');
         jobsGrid.style.display = 'grid';
